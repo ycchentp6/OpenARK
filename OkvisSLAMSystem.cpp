@@ -144,12 +144,12 @@ namespace ark {
                         //copy keypoint
                         keyframe->keypoints_[cam_idx][i] = frame_data.data->keypoints[cam_idx][i];
                         //get estimated 3d position of keypoint in current camera frame
-                        cv::Vec3f pt3d = out_frame->images_[2].at<cv::Vec3f>(
-                            std::round(keyframe->keypoints_[cam_idx][i].pt.y),
-                            std::round(keyframe->keypoints_[cam_idx][i].pt.x));
-                        if(pt3d[2] >0)
-                            keyframe->keypoints3dh_C[cam_idx][i] = Eigen::Vector4d(pt3d[0],pt3d[1],pt3d[2],1);
-                        else
+                        // cv::Vec3f pt3d = out_frame->images_[2].at<cv::Vec3f>(
+                        //     std::round(keyframe->keypoints_[cam_idx][i].pt.y),
+                        //     std::round(keyframe->keypoints_[cam_idx][i].pt.x));
+                        // if(pt3d[2] >0)
+                        //     keyframe->keypoints3dh_C[cam_idx][i] = Eigen::Vector4d(pt3d[0],pt3d[1],pt3d[2],1);
+                        // else
                             keyframe->keypoints3dh_C[cam_idx][i] = Eigen::Vector4d(0,0,0,0);
                     }
                     keyframe->descriptors_[cam_idx]=frame_data.data->descriptors[cam_idx];

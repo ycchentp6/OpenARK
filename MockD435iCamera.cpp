@@ -28,17 +28,17 @@ void MockD435iCamera::start()
     imuStream = ifstream(imuTxtPath.string());
     timestampStream = ifstream(timestampTxtPath.string());
     {
-        auto intrinStream = ifstream(intrinFilePath.string());
-        boost::archive::text_iarchive ia(intrinStream);
-        ia >> depthIntrinsics;
+        //auto intrinStream = ifstream(intrinFilePath.string());
+        //boost::archive::text_iarchive ia(intrinStream);
+        //ia >> depthIntrinsics;
 
-        std::cout << "depthIntrin: fx: " << depthIntrinsics.fx << " fy: " << depthIntrinsics.fy << " ppx: " << depthIntrinsics.ppx << " ppy: " << depthIntrinsics.ppy << '\n';
+        //std::cout << "depthIntrin: fx: " << depthIntrinsics.fx << " fy: " << depthIntrinsics.fy << " ppx: " << depthIntrinsics.ppx << " ppy: " << depthIntrinsics.ppy << '\n';
 
-        auto metaStream = ifstream(metaTxtPath.string());
-        std::string ph;
-        metaStream >> ph >> scale;
-        std::cout << "scale: " << scale << "\n";
-        metaStream.close();
+        //auto metaStream = ifstream(metaTxtPath.string());
+        //std::string ph;
+        //metaStream >> ph >> scale;
+        //std::cout << "scale: " << scale << "\n";
+        //metaStream.close();
     }
 }
 
@@ -138,13 +138,19 @@ void MockD435iCamera::update(MultiCameraFrame::Ptr frame)
         frame->frameId_ = -1;
         return;
     }
-    auto ss = std::stringstream(line);
-    int frameId;
-    double timestamp;
-    ss >> frameId >> timestamp;
 
-    frame->frameId_ = frameId;
+
+    auto ss = std::stringstream(line);
+    string fileName;
+    uint64_t frameId;
+    uint64_t timestamp;
+    ss >> fileName >> timestamp;
+
+    frame->frameId_ = frameIdCount;
+    frameIdCount++;
+    std::cout << "FrameId: "<<frame->frameId_ << std::endl;
     frame->timestamp_ = timestamp;
+
     if (startTime == 0)
     {
         startTime = timestamp;
@@ -153,8 +159,10 @@ void MockD435iCamera::update(MultiCameraFrame::Ptr frame)
     // TODO: not sure if this necessary
     std::stringstream fileNamess;
     // TODO: extract the naming function
-    fileNamess << std::setw(5) << std::setfill('0') << std::to_string(frameId) << ".png";
-    std::string fileName = fileNamess.str();
+    // fileNamess << std::setw(5) << std::setfill('0') << std::to_string(frameId) << ".png";
+    fileName += ".png";
+    // std::string fileName = fileNamess.str();
+    std::cout << "fileName : " << fileName << endl;
 
     std::vector<path> pathList{infraredDir, infrared2Dir, depthDir, infraredDir, depthDir};
     frame->images_.resize(pathList.size());
@@ -166,7 +174,7 @@ void MockD435iCamera::update(MultiCameraFrame::Ptr frame)
     frame->images_[0] = cv::imread((pathList[0] / fileName).string(), cv::IMREAD_GRAYSCALE | cv::IMREAD_ANYDEPTH);
     frame->images_[1] = cv::imread((pathList[1] / fileName).string(), cv::IMREAD_GRAYSCALE | cv::IMREAD_ANYDEPTH);
     frame->images_[3] = cv::imread((pathList[3] / fileName).string(), cv::IMREAD_GRAYSCALE | cv::IMREAD_ANYDEPTH);
-    frame->images_[4] = cv::imread((pathList[4] / fileName).string(), cv::IMREAD_GRAYSCALE | cv::IMREAD_ANYDEPTH);
+    // frame->images_[4] = cv::imread((pathList[4] / fileName).string(), cv::IMREAD_GRAYSCALE | cv::IMREAD_ANYDEPTH);
 
     // project the point cloud at 2
     // TODO: should we mock the block time as well?
@@ -176,9 +184,9 @@ void MockD435iCamera::update(MultiCameraFrame::Ptr frame)
     // std::cout << "RGB Size: " << frame.images_[3].total() << " type: " << frame.images_[3].type() << "\n";
     // std::cout << "DEPTH Size: " << frame.images_[4].total() << " type: " << frame.images_[4].type() << "\n";
 
-    frame->images_[2] = cv::Mat(cv::Size(width,height), CV_32FC3);
-    project(frame->images_[4], frame->images_[2]);
-    frame->images_[2] = frame->images_[2]*scale;
+    // frame->images_[2] = cv::Mat(cv::Size(width,height), CV_32FC3);
+    // project(frame->images_[4], frame->images_[2]);
+    // frame->images_[2] = frame->images_[2]*scale;
 
     // std::cout << "Depth cloud: " << frame.images_[2].total() << "\n";
 }

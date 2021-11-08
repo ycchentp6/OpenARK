@@ -60,6 +60,7 @@ namespace ark {
 
         std::vector<float> getColorIntrinsics() override;
 
+
     protected:
 
         cv::Mat loadImg(path filename);
@@ -80,5 +81,8 @@ namespace ark {
         int width, height;
         time_t startTime;
         double scale;
+    
+    private:
+        std::atomic<unsigned int> frameIdCount = 1;
     };
 }

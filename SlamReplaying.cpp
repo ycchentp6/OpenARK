@@ -180,18 +180,19 @@ int main(int argc, char **argv)
             MultiCameraFrame::Ptr frame(new MultiCameraFrame);
             camera.update(frame);
 
-            const auto frameId = frame->frameId_;
-            if (frameId < 0) {
+            const auto frameId = frame->frameId_ ;
+            if (frameId == -1) {
                 std::cout << "Data end reached\n";
                 break;
             }
+            
             const auto &infrared = frame->images_[0];
             const auto &infrared2 = frame->images_[1];
             const auto &rgb = frame->images_[3];
-            const auto &depth = frame->images_[4];
+            //const auto &depth = frame->images_[4];
 
             cv::imshow(std::string(camera.getModelName()) + " Infrared", infrared);
-            cv::imshow(std::string(camera.getModelName()) + " Depth", depth);
+            //cv::imshow(std::string(camera.getModelName()) + " Depth", depth);
 
             std::vector<ImuPair, Eigen::aligned_allocator<ImuPair>> imuData;
             camera.getImuToTime(frame->timestamp_, imuData);
