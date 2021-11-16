@@ -87,6 +87,9 @@ namespace ark {
                 if (!(frame_found = frame_queue_.try_dequeue(&wrapped_frame))) {
                     break;
                 } 
+                // std::cout << "[okvisSLAMsystem]: popped and prior to conversion " << wrapped_frame.frame->timestamp_ << std::endl;
+                // std::cout << "[okvisSLAMsystem]: popped from queue " << okvis::Time(wrapped_frame.frame->timestamp_) << std::endl;
+                // std::cout << "[okvisSLAMsystem]: try_dequeue " << frame_data.timestamp << std::endl; // frame_data: out frame from OKVIS
             } while (okvis::Time(wrapped_frame.frame->timestamp_) < frame_data.timestamp);
             if (!frame_found){
                 std::cout << "ERROR, FRAME NOT FOUND, THIS SHOULDN'T HAPPEN\n";
@@ -276,10 +279,11 @@ namespace ark {
         if (start_ == okvis::Time(0.0)) {
             start_ = t_image;
         }
-
+        // std::cout  << "[OkvisSLAMSystem] t_image " << t_image << " start_ "<< start_<< std::endl;
         if (t_image - start_ > deltaT_) {
             if(mMapFrameAvailableHandler.size()>0){
-                frame_queue_.enqueue({ frame});
+                frame_queue_.enqueue({ frame});  // push to opepnark's queue
+                // std::cout  << "[OkvisSLAMSystem] enqueue "  << std::fixed << frame->timestamp_<< endl;
             }
             num_frames_++;
             for (size_t i = 0; i < frame->images_.size(); i++) {

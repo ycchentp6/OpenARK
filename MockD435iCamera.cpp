@@ -141,14 +141,16 @@ void MockD435iCamera::update(MultiCameraFrame::Ptr frame)
 
 
     auto ss = std::stringstream(line);
-    string fileName;
+    //string fileName; // read EuRoc data
     uint64_t frameId;
     uint64_t timestamp;
-    ss >> fileName >> timestamp;
+    ss >> frameId >> timestamp; // read room data
+    //ss >> fileName >> timestamp; // read EuRoc data
 
-    frame->frameId_ = frameIdCount;
-    frameIdCount++;
-    std::cout << "FrameId: "<<frame->frameId_ << std::endl;
+    frame->frameId_ = frameId; // read room data
+    //frame->frameId_ = frameIdCount; // read EuRoc data
+    //frameIdCount++; // read EuRoc data
+    // std::cout << "FrameId: "<< frame->frameId_ << std::endl;
     frame->timestamp_ = timestamp;
 
     if (startTime == 0)
@@ -157,12 +159,12 @@ void MockD435iCamera::update(MultiCameraFrame::Ptr frame)
     }
     // reading img
     // TODO: not sure if this necessary
-    std::stringstream fileNamess;
+    std::stringstream fileNamess; // read room data
     // TODO: extract the naming function
-    // fileNamess << std::setw(5) << std::setfill('0') << std::to_string(frameId) << ".png";
-    fileName += ".png";
-    // std::string fileName = fileNamess.str();
-    std::cout << "fileName : " << fileName << endl;
+    fileNamess << std::setw(5) << std::setfill('0') << std::to_string(frameId) << ".png"; // read room data
+    std::string fileName = fileNamess.str();  // read room data
+    //fileName += ".png"; // read EuRoc data
+    //std::cout << " ##### fileName : " << fileName << endl;
 
     std::vector<path> pathList{infraredDir, infrared2Dir, depthDir, infraredDir, depthDir};
     frame->images_.resize(pathList.size());

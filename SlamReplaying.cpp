@@ -134,7 +134,7 @@ int main(int argc, char **argv)
     KeyFrameAvailableHandler kfHandler([](MultiCameraFrame::Ptr frame) {
         frame->saveSimple("map_images/");
     });
-    //slam.AddKeyFrameAvailableHandler(kfHandler, "saving");
+    slam.AddKeyFrameAvailableHandler(kfHandler, "saving");
 
     LoopClosureDetectedHandler loopHandler([&](void) {
         std::vector<Eigen::Matrix4d, Eigen::aligned_allocator<Eigen::Matrix4d>> traj;
@@ -201,6 +201,7 @@ int main(int argc, char **argv)
             slam.PushIMU(imuData);
             // make it the same as real camera
             frame->images_.resize(4);
+            // std::cout  << std::fixed << "[SLAMReplaying] : pushing frame with timestamp " << frame->timestamp_ << endl;
             slam.PushFrame(frame);
         }
         catch (const std::exception &e)

@@ -167,6 +167,7 @@ endif( DEFINED ENV{ARK_DEPS_DIR} )
 
 
 # require Okvis
+set (okvis_DIR "C:/Program Files/okvis/CMake")
 find_package( okvis REQUIRED )
 include_directories(${OKVIS_INCLUDE_DIRS})
 message(STATUS "Found Okvis: ${OKVIS_INCLUDE_DIRS} ${OKVIS_LIBRARIES}")
