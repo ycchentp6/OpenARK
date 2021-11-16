@@ -288,10 +288,10 @@ namespace ark{
 
         void saveSimple(std::string dir){
             std::stringstream filename;
-            for(size_t i=0; i < images_.size(); i++){
-                filename << dir << frameId_ << "_" << i << ".png";
-                cv::imwrite(filename.str(),images_[i]);
-            }
+            // for(size_t i=0; i < images_.size(); i++){
+            //     filename << dir << frameId_ << "_" << i << ".png";
+            //     cv::imwrite(filename.str(),images_[i]);
+            // }
 
             //Add timesync data to timesync file
             std::ofstream kf_T;

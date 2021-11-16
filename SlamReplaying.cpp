@@ -82,8 +82,8 @@ int main(int argc, char **argv)
     traj_win.set_pos(640 * 2.5, 100);
     ar_win.set_pos(0, 100);
     std::map<int, MyGUI::Path *> pathMap;
-    MyGUI::Axis axis1("axis1", .1);
-    MyGUI::Axis axis2("axis2", 1);
+    MyGUI::Axis axis1("axis1", .1); // origin position axis
+    MyGUI::Axis axis2("axis2", 1); // camera axis
     MyGUI::Grid grid1("grid1", 10, 1);
     traj_win.add_object(&axis1);
     traj_win.add_object(&axis2);
