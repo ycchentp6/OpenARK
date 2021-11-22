@@ -305,6 +305,11 @@ namespace ark{
 
         }
 
+        Eigen::Matrix4d getTransformMatrix() {
+            Eigen::Matrix4d T = T_WC(3);
+            return T;
+        }
+ 
         //get image by type
 
         /*Eigen::Matrix4d T_WC(int cameraIdx){

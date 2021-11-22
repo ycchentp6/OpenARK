@@ -93,6 +93,8 @@ int main(int argc, char **argv)
     std::vector<Eigen::Matrix4d, Eigen::aligned_allocator<Eigen::Matrix4d>> T_K_cubes;
     std::vector<MapKeyFrame::Ptr, Eigen::aligned_allocator<MapKeyFrame::Ptr>> K_cubes;
 
+    std::vector<Eigen::Matrix4d, Eigen::aligned_allocator<Eigen::Matrix4d>> T_vectors;
+
     const bool hideInactiveMaps = true;
 
     int lastMapIndex_path = 0;
@@ -127,6 +129,9 @@ int main(int argc, char **argv)
             K_cubes.push_back(frame->keyframe_);
             std::cout << "Adding cube " << cube_name << std::endl;
             ar_win.add_object(obj); //NOTE: this is bad, should change objects to shared_ptr
+            frame->saveSimple("map_images/");
+            T_vectors.push_back(frame->getTransformMatrix());
+            std::cout << "Saving transformation matrix..." << std::endl;
         }
     });
     slam.AddFrameAvailableHandler(handler, "mapping");
@@ -134,7 +139,7 @@ int main(int argc, char **argv)
     KeyFrameAvailableHandler kfHandler([](MultiCameraFrame::Ptr frame) {
         frame->saveSimple("map_images/");
     });
-    slam.AddKeyFrameAvailableHandler(kfHandler, "saving");
+   // slam.AddKeyFrameAvailableHandler(kfHandler, "saving");
 
     LoopClosureDetectedHandler loopHandler([&](void) {
         std::vector<Eigen::Matrix4d, Eigen::aligned_allocator<Eigen::Matrix4d>> traj;
@@ -228,6 +233,12 @@ int main(int argc, char **argv)
         if (k == 'q' || k == 'Q' || k == 27)
             break; // 27 is ESC
     }
+
+    Eigen::Matrix4d start = T_vectors[0];
+    Eigen::Matrix4d end = T_vectors[T_vectors.size()-1];
+    // float rotation_err = (start(0,0)-end(0,0))*(start(0,0)-end(0,0)) + (start(0,1)-end(0,1))* (start(0,1)-end(0,1));
+
+    std::cout << "The rotation error is " << rotation_err << std::endl;
     printf("\nTerminate...\n");
     // Clean up
     slam.ShutDown();
